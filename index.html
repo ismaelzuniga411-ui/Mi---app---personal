@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101522">
+<title>Mi Reconstrucción</title>
+<style>
+:root{--bg:#101522;--panel:#1b2435;--card:#222e42;--accent:#e5a33b;--text:#f4f5f8;--muted:#9ba9bd;--green:#45c48b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{padding:25px 20px 18px;background:#182235;border-bottom:1px solid #344057}
+header small{color:var(--accent);letter-spacing:2px;font-weight:bold}
+h1{font-size:27px;margin:10px 0}
+header p{color:var(--muted);font-size:13px}
+main{max-width:700px;margin:auto;padding:16px;padding-bottom:90px}
+nav{display:flex;gap:7px;overflow-x:auto;padding:12px 0}
+nav button{white-space:nowrap;background:var(--panel);color:var(--muted);border:1px solid #344057;padding:11px;border-radius:10px}
+nav button.active{background:var(--accent);color:#151515;font-weight:bold}
+section{display:none}
+section.active{display:block}
+.card{background:var(--panel);border:1px solid #344057;border-radius:15px;padding:17px;margin:13px 0}
+h2{font-size:19px;margin-top:5px}
+h3{font-size:15px}
+.muted{color:var(--muted);font-size:13px}
+.big{font-size:32px;font-weight:bold;color:var(--accent)}
+input,textarea,select{width:100%;padding:12px;background:#111a29;color:white;border:1px solid #46536a;border-radius:9px;margin:6px 0 13px;font-size:15px}
+textarea{min-height:100px;resize:vertical}
+button.action{background:var(--accent);border:0;padding:12px 16px;border-radius:9px;color:#171717;font-weight:bold}
+button.secondary{background:#344057;color:white;border:0;padding:10px;border-radius:8px}
+.item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #344057}
+.item input{width:20px;height:20px;margin:0;accent-color:var(--green)}
+.item label{flex:1}
+.progress{height:10px;background:#344057;border-radius:20px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:var(--green);width:0%;transition:.2s}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--card);padding:14px;border-radius:12px}
+.stat strong{display:block;font-size:25px;color:var(--accent)}
+.entry{padding:12px 0;border-bottom:1px solid #344057}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
+</style>
+</head>
+<body>
+<header>
+<small>PROYECTO PERSONAL · 2026</small>
+<h1>MI RECONSTRUCCIÓN</h1>
+<p>No más promesas. Acciones.</p>
+<p id="today"></p>
+</header>
+
+<main>
+<nav>
+<button class="active" data-tab="inicio">Inicio</button>
+<button data-tab="disciplina">Disciplina</button>
+<button data-tab="futbol">Fútbol</button>
+<button data-tab="mentalidad">Mentalidad</button>
+<button data-tab="proyectos">Proyectos</button>
+<button data-tab="historial">Historial</button>
+</nav>
+
+<section id="inicio" class="active">
+<div class="card">
+<p class="muted">TU COMPROMISO DE HOY</p>
+<h2>Un día a la vez.</h2>
+<div class="big" id="percentage">0%</div>
+<div class="progress"><div id="bar"></div></div>
+<p class="muted" id="progressText">0 de 5 hábitos cumplidos</p>
+</div>
+<div class="grid">
+<div class="stat"><span class="muted">Racha actual</span><strong id="streak">0</strong><small>días</small></div>
+<div class="stat"><span class="muted">Días registrados</span><strong id="days">0</strong><small>días</small></div>
+</div>
+<div class="card">
+<h2>Mis tres prioridades</h2>
+<div id="prioritySummary"></div>
+</div>
+<div class="card">
+<h2>Mi promesa</h2>
+<p>No voy a abandonarme otra vez.</p>
+</div>
+</section>
+
+<section id="disciplina">
+<div class="card">
+<h2>Mis cinco hábitos diarios</h2>
+<p class="muted">Marca cada actividad cuando la hayas completado.</p>
+<div id="habitList"></div>
+<div class="progress"><div id="habitBar"></div></div>
+<p id="habitCount" class="muted"></p>
+</div>
+<div class="card">
+<h2>Mis prioridades de hoy</h2>
+<p class="muted">Define las tres cosas más importantes de tu día.</p>
+<input id="p1" placeholder="Prioridad número 1">
+<input id="p2" placeholder="Prioridad número 2">
+<input id="p3" placeholder="Prioridad número 3">
+<button class="action" onclick="savePriorities()">Guardar prioridades</button>
+</div>
+</section>
+
+<section id="futbol">
+<div class="card">
+<h2>Mi desarrollo futbolístico</h2>
+<p class="muted">Construye tu rendimiento físico y futbolístico.</p>
+<h3>Objetivo personal</h3>
+<input id="footballGoal" placeholder="Ej. Mejorar velocidad y defensa">
+<button class="action" onclick="saveField('footballGoal','footballGoal')">Guardar objetivo</button>
+</div>
+<div class="card">
+<h2>Registro de entrenamiento</h2>
+<input type="date" id="trainingDate">
+<select id="trainingType">
+<option>Entrenamiento físico</option>
+<option>Técnica individual</option>
+<option>Defensa y marcaje</option>
+<option>Fuerza</option>
+<option>Velocidad</option>
+<option>Entrenamiento de equipo</option>
+<option>Partido</option>
+</select>
+<input id="trainingDuration" type="number" placeholder="Duración en minutos">
+<textarea id="trainingNotes" placeholder="¿Qué trabajaste? ¿Qué mejoraste?"></textarea>
+<button class="action" onclick="saveTraining()">Registrar entrenamiento</button>
+</div>
+<div class="card">
+<h3>Mis entrenamientos</h3>
+<div id="trainingHistory"></div>
+</div>
+</section>
+
+<section id="mentalidad">
+<div class="card">
+<h2>Mi diario personal</h2>
+<p class="muted">Un espacio para reconocer tus avances y trabajar en ti.</p>
+<input type="date" id="journalDate">
+<textarea id="journalMood" placeholder="¿Cómo me siento hoy?"></textarea>
+<textarea id="journalWin" placeholder="¿Qué hice bien hoy?"></textarea>
+<textarea id="journalImprove" placeholder="¿Qué necesito mejorar?"></textarea>
+<textarea id="journalTomorrow" placeholder="¿Qué haré mejor mañana?"></textarea>
+<button class="action" onclick="saveJournal()">Guardar reflexión</button>
+</div>
+<div class="card">
+<h3>Reflexiones anteriores</h3>
+<div id="journalHistory"></div>
+</div>
+</section>
+
+<section id="proyectos">
+<div class="card">
+<h2>Estudios y formación</h2>
+<input id="studyGoal" placeholder="Mi objetivo académico">
+<button class="action" onclick="saveField('studyGoal','studyGoal')">Guardar objetivo</button>
+</div>
+<div class="card">
+<h2>Emprendimiento</h2>
+<input id="businessGoal" placeholder="Mi objetivo de emprendimiento">
+<button class="action" onclick="saveField('businessGoal','businessGoal')">Guardar objetivo</button>
+</div>
+<div class="card">
+<h2>Independencia personal</h2>
+<input id="independenceGoal" placeholder="Mi siguiente paso hacia la independencia">
+<button class="action" onclick="saveField('independenceGoal','independenceGoal')">Guardar objetivo</button>
+</div>
+</section>
+
+<section id="historial">
+<div class="card">
+<h2>Mi progreso</h2>
+<div class="grid">
+<div class="stat"><span class="muted">Hábitos cumplidos</span><strong id="totalHabits">0</strong></div>
+<div class="stat"><span class="muted">Entrenamientos</span><strong id="totalTraining">0</strong></div>
+<div class="stat"><span class="muted">Reflexiones</span><strong id="totalJournal">0</strong></div>
+<div class="stat"><span class="muted">Porcentaje global</span><strong id="globalPercent">0%</strong></div>
+</div>
+</div>
+<div class="card">
+<h2>Últimos días</h2>
+<div id="dailyHistory"></div>
+</div>
+<div class="card">
+<h2>Respaldo de información</h2>
+<p class="muted">Descarga una copia de tus registros para conservarlos.</p>
+<button class="action" onclick="backup()">Descargar respaldo</button>
+</div>
+</section>
+</main>
+<footer>MI RECONSTRUCCIÓN · Cada día cuenta.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toLocaleDateString('en-CA');
+const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const defaults=['Levantarme y comenzar el día','Cuidar mi alimentación e hidratación','Entrenar o realizar actividad física','Cumplir con mis estudios','Trabajar en mi futuro personal'];
+let habits=get('habits',defaults);
+let records=get('records',{});
+let trainings=get('trainings',[]);
+let journals=get('journals',{});
+let priorities=get('priorities',{});
+let goals=get('goals',{});
+
+function record(){
+const d=today();
+if(!records[d])records[d]={habits:Array(5).fill(false)};
+if(!Array.isArray(records[d].habits))records[d].habits=Array(5).fill(false);
+return records[d];
+}
+function renderHabits(){
+$('habitList').innerHTML=habits.map((h,i)=>`<div class="item"><input type="checkbox" id="h${i}" ${record().habits[i]?'checked':''} onchange="toggleHabit(${i},this.checked)"><label for="h${i}">${h}</label></div>`).join('');
+updateStats();
+}
+function toggleHabit(i,v){record().habits[i]=v;put('records',records);updateStats()}
+function updateStats(){
+let n=record().habits.filter(Boolean).length;
+let p=Math.round(n/5*100);
+$('percentage').textContent=p+'%';
+$('bar').style.width=p+'%';
+$('habitBar').style.width=p+'%';
+$('progressText').textContent=n+' de 5 hábitos cumplidos';
+$('habitCount').textContent=n+' de 5 completados';
+$('streak').textContent=streak();
+$('days').textContent=Object.keys(records).length;
+let all=Object.values(records).flatMap(r=>r.habits||[]);
+$('totalHabits').textContent=all.filter(Boolean).length;
+$('globalPercent').textContent=(all.length?Math.round(all.filter(Boolean).length/all.length*100):0)+'%';
+$('totalTraining').textContent=trainings.length;
+$('totalJournal').textContent=Object.keys(journals).length;
+renderHistory();
+}
+function streak(){
+let d=new Date(),s=0;
+while(true){
+let key=d.toLocaleDateString('en-CA');
+if(!records[key]||!records[key].habits?.every(Boolean))break;
+s++;d.setDate(d.getDate()-1);
+}
+return s;
+}
+function savePriorities(){
+priorities[today()]=[$('p1').value,$('p2').value,$('p3').value];
+put('priorities',priorities);renderPriorities();alert('Prioridades guardadas');
+}
+function renderPriorities(){
+let p=priorities[today()]||['','',''];
+['p1','p2','p3'].forEach((id,i)=>$(id).value=p[i]);
+$('prioritySummary').innerHTML=p.map((x,i)=>`<p>${i+1}. ${escapeHTML(x||'Pendiente')}</p>`).join('');
+}
+function saveField(id,key){
+goals[key]=$(id).value;put('goals',goals);alert('Objetivo guardado');
+}
+function saveTraining(){
+if(!$('trainingDuration').value||Number($('trainingDuration').value)<=0){alert('Escribe la duración del entrenamiento');return}
+trainings.unshift({date:$('trainingDate').value||today(),type:$('trainingType').value,duration:$('trainingDuration').value,notes:$('trainingNotes').value});
+put('trainings',trainings);
+$('trainingDuration').value='';$('trainingNotes').value='';
+renderTraining();updateStats();alert('Entrenamiento registrado');
+}
+function renderTraining(){
+$('trainingHistory').innerHTML=trainings.slice(0,20).map(t=>`<div class="entry"><b>${escapeHTML(t.type)}</b><p class="muted">${escapeHTML(t.date)} · ${escapeHTML(t.duration)} minutos</p>${escapeHTML(t.notes)}</div>`).join('')||'<p class="muted">Todavía no hay entrenamientos.</p>';
+}
+function saveJournal(){
+journals[$('journalDate').value||today()]={mood:$('journalMood').value,win:$('journalWin').value,improve:$('journalImprove').value,tomorrow:$('journalTomorrow').value};
+put('journals',journals);renderJournal();updateStats();alert('Reflexión guardada');
+}
+function renderJournal(){
+$('journalHistory').innerHTML=Object.keys(journals).sort().reverse().map(d=>`<div class="entry"><b>${escapeHTML(d)}</b><p>${escapeHTML(journals[d].mood)}</p><p class="muted">${escapeHTML(journals[d].win)}</p><p class="muted">${escapeHTML(journals[d].improve)}</p><p class="muted">${escapeHTML(journals[d].tomorrow)}</p></div>`).join('')||'<p class="muted">Todavía no hay reflexiones.</p>';
+}
+function renderHistory(){
+$('dailyHistory').innerHTML=Object.keys(records).sort().reverse().slice(0,30).map(d=>`<div class="entry">${d} · ${records[d].habits.filter(Boolean).length}/5 hábitos</div>`).join('')||'<p class="muted">Tu historial comenzará aquí.</p>';
+}
+function escapeHTML(s){
+return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function backup(){
+let data={records,trainings,journals,priorities,goals,habits};
+let a=document.createElement('a');
+a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+a.download='mi-reconstruccion-respaldo.json';a.click();
+URL.revokeObjectURL(a.href);
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('main section').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');$(b.dataset.tab).classList.add('active');
+});
+$('today').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+$('trainingDate').value=today();$('journalDate').value=today();
+['footballGoal','studyGoal','businessGoal','independenceGoal'].forEach(k=>$(k).value=goals[k]||'');
+renderHabits();renderPriorities();renderTraining();renderJournal();
+</script>
+</body>
+  </html>
+  
